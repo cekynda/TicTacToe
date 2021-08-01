@@ -26,9 +26,7 @@ class Game
     puts
   end
   
-  def check_first_turn
-    puts 'Чем будете играть? 1 - Х, 2 - О'
-    input = $stdin.gets.chomp.to_i
+  def check_first_turn(input)
     if input == 1
       @players << Bot.new('O')
       @players << Human.new('X')
@@ -39,31 +37,15 @@ class Game
     @players
   end
 
-  def turn_for_human
-    puts
-    puts "введите ячейку 1-9"
-    cell = $stdin.gets.chomp.to_i
-    if (@board[cell - 1] == ' ')
-      @board[cell - 1] = players[0].mark 
-    else
-      puts 'Выберите свободную ячейку'
-      turn_for_human
-    end
-    display_field
-  end
-
   def start
-    check_first_turn
+    puts 'Чем будете играть? 1 - Х, 2 - О'
+    input = $stdin.gets.chomp.to_i
+    check_first_turn(input)
     turns = 1
     while turns < 10
-      if players[0] == Human.new('O') # пытался определить какой из них первым был запушен в массив плеерс для того чтобы понять кто превый ходит
-        turn_for_human
-      else
-        players.each do |player|
-          if player == Bot.new('O')
-            player.turn
-          end
-        end
+      @players.each do |player|
+        player.turn(@board, @players, input)
+        display_field
       end
       if win?
         break
