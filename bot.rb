@@ -4,7 +4,7 @@ class Bot < Players
     @mark = mark
   end
 
-  def turn
+  def turn(player, board)
    puts 'hello i am a bot' #todo
   end
 end
