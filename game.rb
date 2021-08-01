@@ -26,7 +26,7 @@ class Game
     puts
   end
   
-  def first_turn
+  def check_first_turn
     puts 'Чем будете играть? 1 - Х, 2 - О'
     input = $stdin.gets.chomp.to_i
     if input == 1
@@ -40,51 +40,58 @@ class Game
   end
 
   def turn_for_human
+    puts
     puts "введите ячейку 1-9"
     cell = $stdin.gets.chomp.to_i
     if (@board[cell - 1] == ' ')
       @board[cell - 1] = players[0].mark 
     else
       puts 'Выберите свободную ячейку'
-      turn
+      turn_for_human
     end
     display_field
   end
 
   def start
-    first_turn
+    check_first_turn
     turns = 1
     while turns < 10
-      turn_for_human
+      if players[0] == Human.new('O') # пытался определить какой из них первым был запушен в массив плеерс для того чтобы понять кто превый ходит
+        turn_for_human
+      else
+        players.each do |player|
+          if player == Bot.new('O')
+            player.turn
+          end
+        end
+      end
       if win?
         break
       end
-      turn += 1
+      turns += 1
     end
     puts 'Ничья'
   end
 
-  def win?
-    @@win_possitions.each do |win|
-      result = win.map { |index| @board[index] }
-      case result.join
-      when 'OOO'
-        if @players[0].mark == 'O'
-          puts 'Player1 won'
-        else
-          puts 'Player2 won'
-        end
-      when 'XXX'
-        if @players[0].mark == 'X'
-          puts 'Player1 won'
-        else
-          puts 'Player2 won'
-        end
-      end
-      return true
-    end
-
-    return false
+  def win?  # придумать реализацию проверки победы, данные вариант не работает. Или разобраться почему не работает
+   
+    # @@win_possitions.each do |win|
+    #   result = win.map { |index| @board[index] }
+    #   case result.join
+    #   when 'OOO'
+    #     if @players[0].mark == 'O'
+    #       puts 'Player1 won'
+    #     else
+    #       puts 'Player2 won'
+    #     end
+    #   when 'XXX'
+    #     if @players[0].mark == 'X'
+    #       puts 'Player1 won'
+    #     else
+    #       puts 'Player2 won'
+    #     end
+    #   end
+      return false
   end
 end
 
