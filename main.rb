@@ -1,7 +1,7 @@
-require './game.rb'
-require './players.rb'
-require './human.rb'
-require './bot.rb'
+require './game'
+require './players'
+require './human'
+require './bot'
 
 game = Game.new
 game.start

@@ -1,6 +1,7 @@
+require 'pry'
 class Game
-  attr_accessor :players, :board, :mark
-
+  attr_accessor :players, :mark
+  @@board = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
   @@win_possitions = [
     [0, 1, 2],
     [3, 4, 5],
@@ -11,22 +12,62 @@ class Game
     [0, 4, 8],
     [6, 4, 2]
   ]
+  @@bot_turn = []
+  @@human_turn = []
+
+  def self.win_possitions=(win_possitions)
+    @@win_possitions = win_possitions
+  end
+
+  def self.win_possitions
+    @@win_possitions
+  end
+  
+  def self.bot_turn=(bot_turn)
+    @@bot_turn = bot_turn
+  end
+
+  def self.bot_turn
+    @@bot_turn
+  end
+
+  def self.human_turn=(human_turn)
+    @@human_turn = human_turn
+  end
+
+  def self.human_turn
+    @@human_turn
+  end
+
+  def self.board=(board)
+    @@board = board
+  end
+
+  def self.board
+    @@board
+  end
 
   def initialize
     @players = []
-    @board = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+    
   end
 
   def display_field
-    puts "#{@board[0]} | #{@board[1]} | #{@board[2]}"
+    puts "#{@@board[0]} | #{@@board[1]} | #{@@board[2]}"
     puts '---------'
-    puts "#{@board[3]} | #{@board[4]} | #{@board[5]}"
+    puts "#{@@board[3]} | #{@@board[4]} | #{@@board[5]}"
     puts '---------'
-    puts "#{@board[6]} | #{@board[7]} | #{@board[8]}"
+    puts "#{@@board[6]} | #{@@board[7]} | #{@@board[8]}"
     puts
   end
-  
-  def check_first_turn(input)
+
+  def clear
+    system('clear')
+  end
+
+  def check_first_turn
+    puts 'Чем будете играть? 1 - Х, 2 - О'
+    input = $stdin.gets.chomp.to_i
     if input == 1
       @players << Bot.new('O')
       @players << Human.new('X')
@@ -34,46 +75,43 @@ class Game
       @players << Human.new('O')
       @players << Bot.new('X')
     end
-    @players
+  end
+
+  def position_taken?(input)
+    @@board[input] == "X" || @@board[input] == "O"
+  end
+
+  def won?
+    @@win_possitions.detect do |combo|
+      @@board[combo[0]] == @@board[combo[1]] && @@board[combo[1]] == @@board[combo[2]] && position_taken?(combo[0])
+    end
+  end
+
+  def winner
+    won = nil
+    if winner = won?
+      won = @@board[winner.first]
+    end
   end
 
   def start
-    puts 'Чем будете играть? 1 - Х, 2 - О'
-    input = $stdin.gets.chomp.to_i
-    check_first_turn(input)
-    turns = 1
-    while turns < 10
+    check_first_turn
+    loop do
       @players.each do |player|
-        player.turn(@board, @players, input)
-        display_field
+          player.turn
+          clear
+          display_field
+          binding.pry
+          if won?
+            winner = winner()
+            puts "Победил игрок: #{winner}"
+            exit
+          end
+          if !@@board.include?(' ')
+            puts 'Ничья'
+            exit
+          end
       end
-      if win?
-        break
-      end
-      turns += 1
     end
-    puts 'Ничья'
-  end
-
-  def win?  # придумать реализацию проверки победы, данные вариант не работает. Или разобраться почему не работает
-   
-    # @@win_possitions.each do |win|
-    #   result = win.map { |index| @board[index] }
-    #   case result.join
-    #   when 'OOO'
-    #     if @players[0].mark == 'O'
-    #       puts 'Player1 won'
-    #     else
-    #       puts 'Player2 won'
-    #     end
-    #   when 'XXX'
-    #     if @players[0].mark == 'X'
-    #       puts 'Player1 won'
-    #     else
-    #       puts 'Player2 won'
-    #     end
-    #   end
-      return false
   end
 end
-

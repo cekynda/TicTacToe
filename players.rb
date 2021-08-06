@@ -1,10 +1,7 @@
-class Players 
+class Players
   attr_accessor :mark
 
   def check_cell?(cell)
-    if cell < 1 || cell > 9 || (cell.zero? && cell.empty?)
-      puts 'Введите значение от 1-9'
-      return true
-    end
+    cell >= 1 && cell <= 9 && Game.board[cell - 1] == ' '
   end
 end
