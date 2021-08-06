@@ -12,32 +12,6 @@ class Game
     [0, 4, 8],
     [6, 4, 2]
   ]
-  @@bot_turn = []
-  @@human_turn = []
-
-  def self.win_possitions=(win_possitions)
-    @@win_possitions = win_possitions
-  end
-
-  def self.win_possitions
-    @@win_possitions
-  end
-  
-  def self.bot_turn=(bot_turn)
-    @@bot_turn = bot_turn
-  end
-
-  def self.bot_turn
-    @@bot_turn
-  end
-
-  def self.human_turn=(human_turn)
-    @@human_turn = human_turn
-  end
-
-  def self.human_turn
-    @@human_turn
-  end
 
   def self.board=(board)
     @@board = board
@@ -101,7 +75,6 @@ class Game
           player.turn
           clear
           display_field
-          binding.pry
           if won?
             winner = winner()
             puts "Победил игрок: #{winner}"

@@ -9,7 +9,6 @@ class Human < Players
     cell = $stdin.gets.chomp.to_i
     if check_cell?(cell) # проверка на ввод в диапозоне от 1-9 и что не пустое значение
       Game.board[cell - 1] = mark
-      Game.human_turn.push(cell - 1)
     else
       puts 'Выберите свободную ячейку'
       turn
