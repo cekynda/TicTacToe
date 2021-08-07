@@ -1,4 +1,5 @@
 require 'pry'
+require 'colorize'
 class Game
   attr_accessor :players, :mark
   @@board = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
@@ -40,7 +41,7 @@ class Game
   end
 
   def check_first_turn
-    puts 'Чем будете играть? 1 - Х, 2 - О'
+    puts 'Чем будете играть? 1 - Х, 2 - О'  
     input = $stdin.gets.chomp.to_i
     if input == 1
       @players << Bot.new('O')
@@ -52,7 +53,11 @@ class Game
   end
 
   def position_taken?(input)
-    @@board[input] == "X" || @@board[input] == "O"
+    if @@board[input] == "X".light_green || @@board[input] == "O".light_blue
+      true
+    elsif @@board[input] == "X".light_blue || @@board[input] == "O".light_green
+      true
+    end
   end
 
   def won?
@@ -70,6 +75,7 @@ class Game
 
   def start
     check_first_turn
+    display_field
     loop do
       @players.each do |player|
           player.turn
@@ -77,11 +83,11 @@ class Game
           display_field
           if won?
             winner = winner()
-            puts "Победил игрок: #{winner}"
+            puts "Победил игрок: ".green + "#{winner}".yellow
             exit
           end
           if !@@board.include?(' ')
-            puts 'Ничья'
+            puts 'Ничья'.red
             exit
           end
       end
