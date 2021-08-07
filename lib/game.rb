@@ -41,12 +41,16 @@ class Game
   end
 
   def check_first_turn
+    clear
     puts 'Чем будете играть? 1 - Х, 2 - О'  
     input = $stdin.gets.chomp.to_i
     if input == 1
+      clear
       @players << Bot.new('O')
       @players << Human.new('X')
     else
+      clear
+      display_field
       @players << Human.new('O')
       @players << Bot.new('X')
     end
@@ -75,7 +79,6 @@ class Game
 
   def start
     check_first_turn
-    display_field
     loop do
       @players.each do |player|
           player.turn
